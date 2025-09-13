@@ -15,6 +15,10 @@
     the original Pong machines or the Atari 2600 in terms of
     resolution, though in widescreen (16:9) so it looks nicer on 
     modern systems.
+
+    --AI implementation and add-ons are made by Sara Perković as a part of her
+    programming journey with CS50G :) --
+
 ]]
 
 -- push is a library that will allow us to draw our game at a virtual
@@ -234,13 +238,23 @@ function love.update(dt)
     --
     -- player 1
     --we compare the y axis of the ball with the y axis of the paddle
-    if ball.y < player1.y then
-        player1.dy = -PADDLE_SPEED
-    elseif ball.y > player1.y then
-        player1.dy = PADDLE_SPEED
+    
+   if gameState == 'play' then
+    if ball.dx < 0 then
+        if ball.y < player1.y then
+            player1.dy = -PADDLE_SPEED
+        elseif ball.y > player1.y then
+            player1.dy = PADDLE_SPEED
+        else
+            player1.dy = 0
+        end
     else
         player1.dy = 0
     end
+else
+    player1.dy = 0 -- stay still during serve/start/done
+end
+
 
     -- player 2
     if love.keyboard.isDown('up') then
@@ -307,8 +321,8 @@ end
 function love.draw()
     -- begin drawing with push, in our virtual resolution
     push:apply('start')
-
-    love.graphics.clear(40/255, 45/255, 52/255, 255/255)
+    
+    love.graphics.clear(65/255, 2/255, 89/255, 204/255)
     
     -- render different things depending on which part of the game we're in
     if gameState == 'start' then
